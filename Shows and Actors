@@ -1,0 +1,53 @@
+/*
+This project was to practice explicit joins.
+There are two tables, and actors table and a shows table. The actors table contains 
+information of the actor while the shows table about the shows and which actor stars in it.
+*/
+
+create table actors (id integer primary key autoincrement,
+first_name text,
+last_name text,
+show_id integer);
+
+create table shows (id integer primary key autoincrement,
+name text,
+actor_id integer,
+co_star_id integer,
+rating integer);
+
+
+insert into actors (first_name, last_name, show_id) values ("Anthony", "Mackie", 1);
+insert into actors (first_name, last_name, show_id) values ("Sebastion", "Stan", 1);
+insert into actors (first_name, last_name, show_id) values ("Ewan", "McGregor", 2);
+insert into actors (first_name, last_name, show_id) values ("Hayden", "Christensen", 2);
+insert into actors (first_name, last_name, show_id) values ("Tom", "Hiddleston", 3);
+insert into actors (first_name, last_name, show_id) values ("Owen", "Wilson", 3);
+insert into actors (first_name, last_name, show_id) values ("Pedro", "Pascal", 4);
+insert into actors (first_name, last_name, show_id) values ("Gina", "Carano", 4);
+insert into actors (first_name, last_name, show_id) values ("Temuera", "Morrison", 5);
+insert into actors (first_name, last_name, show_id) values ("Ming-Na", "Wen", 5);
+insert into actors (first_name, last_name, show_id) values ("Karl", "Urban", 6);
+insert into actors (first_name, last_name, show_id) values ("Jack", "Quaid", 6);
+insert into actors (first_name, last_name, show_id) values ("Henry", "Cavil", 7);
+insert into actors (first_name, last_name, show_id) values ("Anya", "Chalotra", 7);
+
+insert into shows (name, actor_id, co_star_id, rating) values ("The Falcon and Winter Soldier", 1, 2, 98);
+insert into shows (name, actor_id, co_star_id, rating) values ("Obi-Wan Kenobi", 3, 4, 82);
+insert into shows (name, actor_id, co_star_id, rating) values ("Loki", 5, 6, 100);
+insert into shows (name, actor_id, co_star_id, rating) values ("The Mandolorian", 7, 8, 100);
+insert into shows (name, actor_id, co_star_id, rating) values ("The Book of Boba Fett", 9, 10, 73);
+insert into shows (name, actor_id, co_star_id, rating) values ("The Boys", 11, 12, 60);
+insert into shows (name, actor_id, co_star_id, rating) values ("The Witcher", 13, 14, 80);
+
+/* this first join selects which actors star in which shows that have a rating above 85 */
+select first_name, last_name, name, rating from actors
+    join shows
+    on actors.show_id = shows.id
+    where rating > 85
+    order by first_name asc;
+
+/* This second join selects actors and their co-stars on their respective shows */
+select a.first_name, a.last_name, b.first_name, b.last_name, shows.name 
+    from actors a, actors b
+    join shows
+    on a.id = shows.actor_id and b.id = shows.co_star_id;
