@@ -15,6 +15,17 @@ actor_id integer,
 co_star_id integer,
 rating integer);
 
+create table service (id integer primary key autoincrement,
+name text,
+sub_price_$ integer);
+
+insert into service (name, sub_price_$) values ("Hulu", 8);
+insert into service (name, sub_price_$) values ("Disney+", 10);
+insert into service (name, sub_price_$) values ("HBO Max", 11);
+insert into service (name, sub_price_$) values ("Amazon Prime", 110);
+insert into service (name, sub_price_$) values ("Netflix", 10);
+insert into service (name, sub_price_$) values ("AMC+", 15);
+insert into service (name, sub_price_$) values ("Apple TV", 20);
 
 insert into actors (first_name, last_name, show_id) values ("Anthony", "Mackie", 1);
 insert into actors (first_name, last_name, show_id) values ("Sebastion", "Stan", 1);
@@ -30,24 +41,54 @@ insert into actors (first_name, last_name, show_id) values ("Karl", "Urban", 6);
 insert into actors (first_name, last_name, show_id) values ("Jack", "Quaid", 6);
 insert into actors (first_name, last_name, show_id) values ("Henry", "Cavil", 7);
 insert into actors (first_name, last_name, show_id) values ("Anya", "Chalotra", 7);
+insert into actors (first_name, last_name, show_id) values ("Bryan", "Cranston", 8);
+insert into actors (first_name, last_name, show_id) values ("Aaron", "Paul", 8);
+insert into actors (first_name, last_name, show_id) values ("Kaley", "Cuoco", 9);
+insert into actors (first_name, last_name, show_id) values ("Lake", "Bell", 9);
+insert into actors (first_name, last_name, show_id) values ("Andrew", "Lincoln", 10);
+insert into actors (first_name, last_name, show_id) values ("Norman", "Reedus", 10);
+insert into actors (first_name, last_name, show_id) values ("Jason", "Sudeikis", 11);
+insert into actors (first_name, last_name, show_id) values ("Hannah", "Waddingham", 11);
+insert into actors (first_name, last_name, show_id) values ("Millie Bobby", "Brown", 12);
+insert into actors (first_name, last_name, show_id) values ("Finn", "Wolfhard", 12);
 
-insert into shows (name, actor_id, co_star_id, rating) values ("The Falcon and Winter Soldier", 1, 2, 98);
-insert into shows (name, actor_id, co_star_id, rating) values ("Obi-Wan Kenobi", 3, 4, 82);
-insert into shows (name, actor_id, co_star_id, rating) values ("Loki", 5, 6, 100);
-insert into shows (name, actor_id, co_star_id, rating) values ("The Mandolorian", 7, 8, 100);
-insert into shows (name, actor_id, co_star_id, rating) values ("The Book of Boba Fett", 9, 10, 73);
-insert into shows (name, actor_id, co_star_id, rating) values ("The Boys", 11, 12, 60);
-insert into shows (name, actor_id, co_star_id, rating) values ("The Witcher", 13, 14, 80);
+insert into shows (name, actor_id, co_star_id, service_id,rating) values ("The Falcon and Winter Soldier", 1, 2, 2, 98);
+insert into shows (name, actor_id, co_star_id, service_id, rating) values ("Obi-Wan Kenobi", 3, 4, 2, 82);
+insert into shows (name, actor_id, co_star_id, service_id, rating) values ("Loki", 5, 6, 2, 100);
+insert into shows (name, actor_id, co_star_id, service_id, rating) values ("The Mandolorian", 7, 8, 2, 100);
+insert into shows (name, actor_id, co_star_id, service_id, rating) values ("The Book of Boba Fett", 9, 10, 2, 73);
+insert into shows (name, actor_id, co_star_id, service_id, rating) values ("The Boys", 11, 12, 4, 60);
+insert into shows (name, actor_id, co_star_id, service_id, rating) values ("The Witcher", 13, 14, 5, 80);
+insert into shows (name, actor_id, co_star_id, service_id, rating) values ("Breaking Bad", 15, 16, 6, 100);
+insert into shows (name, actor_id, co_star_id, service_id, rating) values ("Harley Quinn", 17, 18, 3, 85);
+insert into shows (name, actor_id, co_star_id, service_id, rating) values ("The Walking Dead", 19, 20, 6, 80);
+insert into shows (name, actor_id, co_star_id, service_id, rating) values ("Ted Lasso", 21, 22, 7, 95);
+insert into shows (name, actor_id, co_star_id, service_id, rating) values ("Stranger Things", 23, 24, 5, 98);
 
 /* this first join selects which actors star in which shows that have a rating above 85 */
-select first_name, last_name, name, rating from actors
+select first_name, last_name, name, rating 
+    from actors
     join shows
     on actors.show_id = shows.id
     where rating > 85
     order by first_name asc;
 
 /* This second join selects actors and their co-stars on their respective shows */
-select a.first_name, a.last_name, b.first_name, b.last_name, shows.name 
+select a.first_name, a.last_name, b.first_name, b.last_name, c.name
     from actors a, actors b
-    join shows
-    on a.id = shows.actor_id and b.id = shows.co_star_id;
+    join shows c
+    on a.id = c.actor_id and b.id = c.co_star_id;
+
+/* This join selects shows and their respective services */
+select shows.name, service.name 
+    from shows
+    join service
+    on shows.service_id = service.id;
+
+/* This left join selects services, counts how many shows are on the service and their avg rating of the shows. 
+I used a left join because there might be service that don't have any shows in the database yet but I still want the to come up for the query */
+select service.name, count(shows.name), avg(rating) 
+    from service
+    left join shows
+    on service.id = shows.service_id
+    group by service.name;
