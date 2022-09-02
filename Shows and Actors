@@ -1,7 +1,8 @@
 /*
 This project was to practice explicit joins.
-There are two tables, and actors table and a shows table. The actors table contains 
-information of the actor while the shows table about the shows and which actor stars in it.
+There are three tables, an actors table, a shows table, and a service table. The actors table contains 
+information of the actor. The shows table has information about the show, its actors, and which streaming service it is availiable on.
+The service table is what is sounds like, a table holding all the info about the various services the shows appear on
 */
 
 create table actors (id integer primary key autoincrement,
