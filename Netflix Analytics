@@ -1,0 +1,36 @@
+/* This piece of code is where I am querying from a database instead of Standard SQL, I am using PostGRESQL */
+
+
+/* Selects all media, thier titles, directors, cast, and what type of media they are */
+SELECT people.show_id, people.director, titles.title, titles.type
+FROM "CharlotteChaze/BreakIntoTech"."netflix_people" people
+LEFT JOIN "CharlotteChaze/BreakIntoTech"."netflix_titles_info" titles
+ON people.show_id = titles.show_id;
+
+
+/* How many movie titles are there in the database? (movies only, not tv shows) */
+SELECT count(title)
+FROM "CharlotteChaze/BreakIntoTech"."netflix_titles_info"
+where type = 'Movie';
+
+/* When was the most recent batch of tv shows and/or movies added to the database? */
+SELECT max(date(date_added))
+FROM "CharlotteChaze/BreakIntoTech"."netflix_titles_info";
+
+/* List all the movies and tv shows in alphabetical order. */
+SELECT title
+FROM "CharlotteChaze/BreakIntoTech"."netflix_titles_info"
+ORDER BY title ASC;
+
+/* Who was the Director for the movie Bright Star? */
+SELECT title, director
+FROM "CharlotteChaze/BreakIntoTech"."netflix_people" people
+LEFT JOIN "CharlotteChaze/BreakIntoTech"."netflix_titles_info" titles
+ON people.show_id = titles.show_id
+WHERE title = 'Bright Star';
+
+/* What is the oldest movie in the database and what year was it made? */
+SELECT title, release_year
+FROM "CharlotteChaze/BreakIntoTech"."netflix_titles_info"
+ORDER BY release_year ASC
+LIMIT 1;
