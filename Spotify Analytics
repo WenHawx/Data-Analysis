@@ -1,0 +1,36 @@
+/* For this project, I downloaded Spotify data from Kaggle.
+I then created a table to insert the data into,
+Finally, I performed some analytics on the data using SQL */
+
+
+SELECT artist_name, track_name, MAX(duration_ms)
+FROM BIT_DB.Spotifydata;
+
+SELECT artist_name, track_name, popularity
+FROM BIT_DB.Spotifydata
+ORDER BY popularity DESC
+LIMIT 10;
+
+SELECT avg(popularity)
+FROM BIT_DB.Spotifydata
+WHERE popularity IN 
+(SELECT popularity
+FROM BIT_DB.Spotifydata
+ORDER BY popularity DESC
+LIMIT 10);
+
+SELECT artist_name, track_name, MAX(duration_ms)
+FROM BIT_DB.Spotifydata
+WHERE popularity IN 
+(SELECT popularity
+FROM BIT_DB.Spotifydata
+ORDER BY popularity DESC
+LIMIT 10);
+
+SELECT artist_name, track_name, MIN(duration_ms)
+FROM BIT_DB.Spotifydata
+WHERE popularity IN 
+(SELECT popularity
+FROM BIT_DB.Spotifydata
+ORDER BY popularity DESC
+LIMIT 10);
