@@ -2,15 +2,39 @@
 I then created a table to insert the data into,
 Finally, I performed some analytics on the data using SQL */
 
+/* Creating the table */ 
+CREATE TABLE BIT_DB.Spotifydata (
+id integer PRIMARY KEY,
+artist_name varchar NOT NULL,
+track_name varchar NOT NULL,
+track_id varchar NOT NULL,
+popularity integer NOT NULL,
+danceability decimal(4,3) NOT NULL,
+energy decimal(4,3) NOT NULL,
+key integer NOT NULL,
+loudness decimal(5,3) NOT NULL,
+mode integer NOT NULL,
+speechiness decimal(5,4) NOT NULL,
+acousticness decimal(6,5) NOT NULL,
+instrumentalness text NOT NULL,
+liveness decimal(5,4) NOT NULL,
+valence decimal(4,3) NOT NULL,
+tempo decimal(6,3) NOT NULL,
+duration_ms integer NOT NULL,
+time_signature integer NOT NULL 
+)
 
+/* what is the longest song in the table */
 SELECT artist_name, track_name, MAX(duration_ms)
 FROM BIT_DB.Spotifydata;
 
+/* What are the top ten songs by popularity rating */
 SELECT artist_name, track_name, popularity
 FROM BIT_DB.Spotifydata
 ORDER BY popularity DESC
 LIMIT 10;
 
+/* What is the average popularity rating of the top ten songs */
 SELECT avg(popularity)
 FROM BIT_DB.Spotifydata
 WHERE popularity IN 
@@ -19,6 +43,7 @@ FROM BIT_DB.Spotifydata
 ORDER BY popularity DESC
 LIMIT 10);
 
+/* What is the longest song of the top ten */
 SELECT artist_name, track_name, MAX(duration_ms)
 FROM BIT_DB.Spotifydata
 WHERE popularity IN 
@@ -27,6 +52,7 @@ FROM BIT_DB.Spotifydata
 ORDER BY popularity DESC
 LIMIT 10);
 
+/* What is the shortest of the top ten */
 SELECT artist_name, track_name, MIN(duration_ms)
 FROM BIT_DB.Spotifydata
 WHERE popularity IN 
@@ -34,3 +60,19 @@ WHERE popularity IN
 FROM BIT_DB.Spotifydata
 ORDER BY popularity DESC
 LIMIT 10);
+
+/* What is the average danceability and energy of the top ten most lively songs */
+SELECT AVG(danceability), AVG(energy)
+FROM BIT_DB.Spotifydata
+WHERE liveness IN
+(SELECT liveness
+FROM BIT_DB.Spotifydata
+ORDER BY liveness DESC
+LIMIT 10);
+
+/* What is the name, artist name, and energy rating for the most lively song */
+SELECT artist_name, track_name, energy
+FROM BIT_DB.Spotifydata
+WHERE liveness IN 
+( SELECT MAX(liveness)
+FROM BIT_DB.Spotifydata);
