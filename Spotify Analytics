@@ -76,3 +76,15 @@ FROM BIT_DB.Spotifydata
 WHERE liveness IN 
 ( SELECT MAX(liveness)
 FROM BIT_DB.Spotifydata);
+
+/* This query creates a CTE that has all the artists and their average popularity, 
+it then selects artist with an average of 90 and above and labels them as a "Top Star" */
+WITH popularity_average_CTE AS (
+    SELECT artist_name, AVG(popularity) as avg_popularity
+    FROM BIT_DB.Spotifydata
+    GROUP BY artist_name
+)
+
+SELECT artist_name, avg_popularity, "Top Star" as tag
+FROM popularity_average_CTE
+WHERE avg_popularity >= 90;
