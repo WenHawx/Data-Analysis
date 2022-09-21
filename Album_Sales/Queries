@@ -1,0 +1,92 @@
+/* These queries are for the chinook database in the same folder */
+
+
+
+/* Who are the customers that are not from the US */
+SELECT customerID, firstname, lastname, country
+FROM chinook.customers
+WHERE country != "US";
+
+/* Who are the customers that are from Brazil */
+SELECT customerid, firstname, lastname
+FROM chinook.customers
+WHERE country = "Brazil";
+
+/* Show the customers and their invoices that are from Brazil */
+SELECT firstname, lastname, invoiceID, invoicedate, billingcountry
+FROM chinook.customers
+JOIN chinook.invoices
+ON customers.CustomerId = invoices.CustomerId
+WHERE country = "Brazil";
+
+/* Show the employees that are Sales Agents */
+SELECT employeeid, firstname, lastname
+FROM employees
+WHERE title = "Sales Support Agent";
+
+/* Show how many distinct countries that we have made sales in */
+SELECT DISTINCT(billingcountry)
+FROM invoices;
+
+/* Show each invoice and the associated Sales Agent */
+SELECT emp.employeeid, emp.firstname, emp.lastname, inv.invoiceid
+FROM employees emp
+JOIN customers cust ON emp.EmployeeId = cust.SupportRepId
+JOIN invoices inv ON cust.CustomerId = inv.CustomerId;
+
+/* Show the customer, their invoice, the relevant sales agent, and the the invoice total */
+SELECT inv.invoiceid, cust.firstname, cust.lastname, cust.country, emp.firstname, emp.lastname, inv.total
+FROM customers cust
+JOIN invoices inv ON cust.customerid = inv.customerid
+JOIN employees emp ON emp.employeeid = cust.supportrepid;
+
+/* Show how many sales there were in 2009 */
+SELECT COUNT(*)
+FROM invoices
+WHERE invoicedate BETWEEN '2009-01-01' AND '2009-12-31';
+
+/* What was the total revenue for 2009 */
+SELECT SUM(total)
+FROM invoices
+WHERE invoicedate BETWEEN '2009-01-01' AND '2009-12-31';
+
+/* List every track and their corrosponding invoice line item id */
+SELECT trk.name, inv.invoicelineid
+FROM tracks trk
+JOIN invoice_items inv ON trk.trackid = inv.trackid;
+
+/* List every track, their line item id and the artist */
+SELECt trk.name, art.name, inv.invoicelineid
+FROM tracks trk
+JOIN albums alb ON alb.albumid = trk.albumid
+JOIN artists art ON alb.artistid = art.artistid
+JOIN invoice_items inv ON trk.trackid = inv.trackid;
+
+/* This is another way for the same query as above */
+SELECT trk.name, trk.composer, inv.invoicelineid
+FROM tracks trk
+JOIN invoice_items inv ON inv.trackid = trk.trackid;
+
+/* List every track, the album that it's on, its media type, and its genre */
+SELECT trk.name as track, alb.title as album, med.name as medie_type, gen.name as genre
+FROM tracks trk
+JOIN albums alb ON trk.albumid = alb.albumid
+JOIN media_types med ON med.mediatypeid = trk.mediatypeid
+JOIN genres gen ON gen.genreid = trk.genreid;
+
+/* Show each sales agent and their total sales */
+SELECT emp.firstname, emp.lastname, ROUND(SUM(inv.total)) as total_sales
+FROM employees emp
+JOIN customers cust ON cust.supportrepid = emp.employeeid
+JOIN invoices inv ON inv.customerid = cust.customerid
+GROUP BY emp.firstname;
+
+/* Show which agent made the most sales in 2009 */
+SELECT emp.firstname, emp.lastname, ROUND(SUM(inv.total)) as total_sales
+FROM employees emp
+JOIN customers cust ON cust.supportrepid = emp.employeeid
+JOIN invoices inv ON inv.customerid = cust.customerid
+WHERE inv.invoicedate BETWEEN '2009-01-01' AND '2009-12-31'
+GROUP BY emp.firstname
+ORDER BY (ROUND(SUM(inv.total))) DESC
+LIMIT 1;
