@@ -1,6 +1,6 @@
-# SQL
-SQL Portfolio
 
-Hello, This is my SQL portfolio. 
+Data Analysis Portfolio
 
-I am currently learning SQL. This repository will contain various examples of SQL I've written during my journey to expand my skillset.
+Hello, This is my Data Analysis portfolio. 
+
+This repository will contain various projects that pretain to data analysis. 
